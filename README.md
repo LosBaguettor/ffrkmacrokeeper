@@ -9,6 +9,8 @@ Hi everyone,
 If anything unexpected happen, check if this issue already exist, if it doesn't, please generate one.  
 Make sure to join a screenshot of the app (use Alt+PrintScreen then past in Paint, save it in PNG).  
 
+This macro use image to work, if you have any permanent special settings activated (like forced AA) in your graphic card, this macro may not work, make sure to desactivate them if you do.
+
 as a reminder, **FFRK AndApp** version only exist for the **Japanese version** of the game.
 
 
@@ -21,7 +23,7 @@ as a reminder, **FFRK AndApp** version only exist for the **Japanese version** o
 - Recover from (most) System Error.
 - Recover from a Black Screen hang.
 - Automatically Relog at daily reset if activated
-- Automatically Relog the macro if you logged in from an other device if activated. (not done yet)
+- Automatically Relog the macro if you logged in from an other device if activated.
 - Force quit any non-"Normal Dungeon" to go farm fabul if activated.
 - Delay the start of the farm.
 
