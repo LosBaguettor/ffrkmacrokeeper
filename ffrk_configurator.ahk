@@ -81,6 +81,7 @@ IniWrite, %ffrkwidth%, %A_ScriptDir%\include\ffrk_macro.ini, and, ffrkwidth
 ;IniWrite, 0, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, extdeviceforcerelog
 ;IniWrite, 25, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, blackscreentimer
 ;IniWrite, 2, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, sleepspeed
+;IniWrite, 0, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, rebootwhilefight
 Sleep,1000
 ExitApp
 Return

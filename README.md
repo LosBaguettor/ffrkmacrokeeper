@@ -13,6 +13,20 @@ This macro use image to work, if you have any permanent special settings activat
 
 as a reminder, **FFRK AndApp** version only exist for the **Japanese version** of the game.
 
+##
+
+### Changelog
+
+V2.02  
+Now include a massive failover.  
+If autostart is desactivated and the failover triggers, the game will close which means the farm will stop complely.  
+If autostart is activated and the failover triggers, the game will restart and try to continue farming.  
+
+Now include a basic log function.  
+If you don't want to use it, delete log folder, but this can help to find issues if the macro doesn't work for you.  
+I'll rework it for next version for a more advanced version.  
+
+Now include a way to continue or cancel the current fight if the game crash while fighting, see Configuration.  
 
 ##
 
@@ -76,6 +90,7 @@ To get WidthD and HeightD :
 - **extdeviceforcerelog** - set to 1 if you want to the macro to relog after being kicked out because you logged on an other device. (default : 0)
 - **blackscreentimer** - Number of Loop before the macro consider your game hanged on a Black Screen. (default : 25)
 - **sleepspeed** - Reduce Macro sleep delay,  higher chance of unexpected result for non-standard value in case of Lag (default : 2)
+- **rebootwhilefight** - set to 1 if you want to continue the fight if the game crash while in fight. (default : 0)
 
 sleepspeed values :
 - Very Fast : [0] , reduce most sleep by 85%.

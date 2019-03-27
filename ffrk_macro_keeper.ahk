@@ -16,22 +16,28 @@ global ffrkcBScount = 0
 global blackscreentimer
 global extdeviceforcerelog
 global sleepspeed
+global iniurl := A_ScriptDir  "\include\ffrk_macro.ini"
+global logurl := A_ScriptDir  "\log\" A_YYYY "_" A_MM "_" A_DD ".txt"
+global fightID = 0
+global emptyloop = 0
+global rebootwhilefight
 
-IniRead, ffrkcrashrelog, %A_ScriptDir%\include\ffrk_macro.ini, baguette, ffrkcrashrelog , 1
-IniRead, ffrkdailyrelog, %A_ScriptDir%\include\ffrk_macro.ini, baguette, ffrkdailyrelog , 0
-IniRead, ffrkautostart, %A_ScriptDir%\include\ffrk_macro.ini, baguette, ffrkautostart , 1
-IniRead, ffrkstamina, %A_ScriptDir%\include\ffrk_macro.ini, baguette, ffrkstamina , 20
-IniRead, ffrkaggro, %A_ScriptDir%\include\ffrk_macro.ini, and, ffrkaggro , 1
-;IniRead, ffrkmacromode, %A_ScriptDir%\include\ffrk_macro.ini, and, ffrkmacromode , 1
+IniRead, ffrkcrashrelog, %iniurl%, baguette, ffrkcrashrelog , 1
+IniRead, ffrkdailyrelog, %iniurl%, baguette, ffrkdailyrelog , 0
+IniRead, ffrkautostart, %iniurl%, baguette, ffrkautostart , 1
+IniRead, ffrkstamina, %iniurl%, baguette, ffrkstamina , 20
+IniRead, ffrkaggro, %iniurl%, and, ffrkaggro , 1
+;IniRead, ffrkmacromode, %iniurl%, and, ffrkmacromode , 1
 ffrkmacromode = 1
-IniRead, ffrkmacrocond, %A_ScriptDir%\include\ffrk_macro.ini, and, ffrkmacrocond , 1
-IniRead, ffrkheight, %A_ScriptDir%\include\ffrk_macro.ini, and, ffrkheight , 39
-IniRead, ffrkwidth, %A_ScriptDir%\include\ffrk_macro.ini, and, ffrkwidth , 16
-IniRead, delaystart, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, delaystart , 100
-IniRead, ffrktmor, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, dungeonforcequit , 0
-IniRead, extdeviceforcerelog, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, extdeviceforcerelog , 0
-IniRead, blackscreentimer, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, blackscreentimer , 25
-IniRead, sleepspeed, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, sleepspeed , 2
+IniRead, ffrkmacrocond, %iniurl%, and, ffrkmacrocond , 1
+IniRead, ffrkheight, %iniurl%, and, ffrkheight , 39
+IniRead, ffrkwidth, %iniurl%, and, ffrkwidth , 16
+IniRead, delaystart, %iniurl%, knuckles, delaystart , 100
+IniRead, ffrktmor, %iniurl%, knuckles, dungeonforcequit , 0
+IniRead, extdeviceforcerelog, %iniurl%, knuckles, extdeviceforcerelog , 0
+IniRead, blackscreentimer, %iniurl%, knuckles, blackscreentimer , 25
+IniRead, sleepspeed, %iniurl%, knuckles, sleepspeed , 2
+IniRead, rebootwhilefight, %iniurl%, knuckles, rebootwhilefight , 0
 
 global ffrk_window_height := 498 + ffrkheight
 global ffrk_window_width := 280 + ffrkwidth
@@ -72,16 +78,20 @@ F2::ExitApp
 F3::Reload
 
 F1::
+FileAppend , Macro started at %A_Hour%h %A_Min%min`n , %logurl%
 if (ffrkautostart = 1)
 	{
 	ffrkshortcut := A_Desktop "\FFRK.lnk"
 	if !FileExist(ffrkshortcut)
 		{
 		msgbox, 48,ERROR,There's no Andapp FFRK shortcut on your desktop !`n`nThis macro will close.
+		FileAppend , ERROR no FFRK shortcut`n , %logurl%
 		sleep, 2000
 		ExitApp
 		}
+	FileAppend , FFRK Shortcut OK`n , %logurl%
 	}
+FileAppend , Script will start in %delaystart%msec`n , %logurl%
 Sleep, delaystart
 Loop
 	{
@@ -93,6 +103,7 @@ FFRK_farming_process:
 		If ( ffrkon = 0 )
 			{
 			Run %ffrkshortcut%
+			FileAppend , FFRK has started`n , %logurl%
 			sleep 30000
 			}
 		}
@@ -105,6 +116,7 @@ FFRK_farming_process:
 			FFRK_state(1)
 			Sleep, %SLP1%
 			WinClose
+			FileAppend , ERROR FFRK Black screen hang FFRK will restart`n , %logurl%
 			Sleep,10000
 			}
 		else if ( ffrkcBS = 0)
@@ -163,6 +175,8 @@ FFRK_farming_process:
 		{
 		FFRK_click(194,304)
 		sleep, %SLP2%
+		fightID := fightID +1
+		FileAppend , fight %fightID% has started`n , %logurl%
 		goto, FFRK_farming_process
 		}
 	ffrkb4 := FFRK_ConfirmImage("ffrk_battle_4",imagevar)
@@ -186,6 +200,7 @@ FFRK_farming_process:
 	
 	ffrkcSE := FFRK_ConfirmImage("ffrk_crash_systemerror",imagevar)
 	ffrkcEXTD := FFRK_ConfirmImage("ffrk_crash_extdevicelog",imagevar)
+	ffrkrXWF := FFRK_ConfirmImage("ffrk_relog_X_rebootwhilefight",imagevar)	
 
 	ffrksXF := FFRK_ConfirmImage("ffrk_select_X_dungeonforcequit",imagevar)
 	
@@ -199,10 +214,12 @@ FFRK_farming_process:
 		}
 	else If ( ffrkcSE = 0 )
 		{
+		FileAppend , SYSTEM ERROR relog`n , %logurl%
 		FFRK_click(132,311)
 		}	
 	else If ( ffrksXF = 0 and ffrktmor = 1)
 		{
+		FileAppend , FORCE QUIT DUNGEON ACTIVATED`n , %logurl%
 		FFRK_click(183,311)
 		}	
 	else If ( ffrks6 = 0 )
@@ -263,6 +280,7 @@ FFRK_farming_process:
 		}	
 	else If ( ffrkd1 = 0 and ffrkdailyrelog = 1)
 		{
+		FileAppend , DAILY RELOG ACTIVATE`n , %logurl%
 		FFRK_click(140,313)
 		}	
 	else If ( ffrkd2 = 0 )
@@ -287,20 +305,64 @@ FFRK_farming_process:
 		{
 		if (extdeviceforcerelog = 0)
 			{
+			FileAppend , ERROR Disconnected ! An other device has logged`n , %logurl%
 			msgbox, 48,ERROR,Disconnected !`nAn other device has logged on this account !`n`nThis macro will close.
 			sleep, 2000
 			ExitApp
 			}
 		else
 			{
+			FileAppend , Disconnected ! an other device has logged - force relog`n , %logurl%
 			FFRK_click(139,314)
 			}
 		}	
+	else If ( ffrkrXWF = 0 )
+		{
+		if (rebootwhilefight = 1)
+			{
+			FileAppend , ERROR Fight exist at login - GO TO BATTLE`n , %logurl%
+			FFRK_click(193,313)
+			}
+		else
+			{
+			FileAppend , ERROR Fight exist at login - CANCEL BATTLE`n , %logurl%
+			FFRK_click(70,313)
+			}
+		}	
+	else
+		{
+		emptyloop := emptyloop +1
+		emptyloopmod := mod(emptyloop,10)
+		if (emptyloopmod = 0)
+			{
+			FileAppend , ERROR Macro did nothing for %emptyloop% turns`n , %logurl%
+			}
+		if (emptyloop > 100)
+			{
+			FFRK_state(1)
+			Sleep, %SLP1%
+			WinClose
+			FileAppend , ERROR Macro seems to do nothing `n , %logurl%
+			emptyloop = 0
+			Sleep,10000
+			If ( ffrkautostart = 0 )
+				{
+				msgbox, 48,ERROR,Macro seems to do nothing and autostart is desactivated !`n`nThis macro will close.
+				FileAppend , FFRK and Macro will close`n , %logurl%
+				sleep, 2000
+				ExitApp
+				}
+			else
+				{
+			FileAppend , FFRK will restart`n , %logurl%
+				}
+			}
+		}
 	}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; check FFRK Grey window error and close it
+; check FFRK Grey window error network 101 and close it
 FFRK_grey()
 	{
 	If WinExist("ahk_class #32770")
@@ -344,6 +406,7 @@ FFRK_click(X,Y)
 	Click, X ,Y Down Left
 	Sleep, 300
 	Click, X ,Y Up Left
+	emptyloop = 0
 	}
 	
 ; check image for lazy
