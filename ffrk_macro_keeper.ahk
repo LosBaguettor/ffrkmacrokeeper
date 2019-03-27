@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%
 SetTitleMatchMode 2
 SetControlDelay 0
 SetKeyDelay -1
-SetMouseDelay 0
+SetMouseDelay -1
 SetWinDelay 0
 SetBatchLines -1
 CoordMode, Pixel, relative
@@ -14,6 +14,8 @@ global ffrkaggro
 global ffrkcBS = 1
 global ffrkcBScount = 0
 global blackscreentimer
+global extdeviceforcerelog
+global sleepspeed
 
 IniRead, ffrkcrashrelog, %A_ScriptDir%\include\ffrk_macro.ini, baguette, ffrkcrashrelog , 1
 IniRead, ffrkdailyrelog, %A_ScriptDir%\include\ffrk_macro.ini, baguette, ffrkdailyrelog , 0
@@ -29,6 +31,7 @@ IniRead, delaystart, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, delaystart 
 IniRead, ffrktmor, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, dungeonforcequit , 0
 IniRead, extdeviceforcerelog, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, extdeviceforcerelog , 0
 IniRead, blackscreentimer, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, blackscreentimer , 25
+IniRead, sleepspeed, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, sleepspeed , 2
 
 global ffrk_window_height := 498 + ffrkheight
 global ffrk_window_width := 280 + ffrkwidth
@@ -46,6 +49,21 @@ else
 	pixelvar = 10
 	}
 ffrkstamlimit := "ffrk_battle_1_stamina_" ffrkstamina
+if (sleepspeed = 1)
+	{
+	global SLP1 = 50
+	global SLP2 = 5
+	}
+else if (sleepspeed = 0)
+	{
+	global SLP1 = 15
+	global SLP2 = 1
+	}
+else
+	{
+	global SLP1 = 100
+	global SLP2 = 10
+	}
 	
 MsgBox, 48,FFRK Magia Macro Keeper V2.00 by LosBaguettor, Hello`nTo properly use this macro,`nPlease check the README !`n`nPress F1 to START the macro`nPress F2 to CLOSE the macro`nPress F3 to RELOAD the macro`n`nPress OK to continue`n`nHave fun farming !!
 
@@ -54,7 +72,7 @@ F2::ExitApp
 F3::Reload
 
 F1::
-if (ffrkdailyrelog = 1 or ffrkautostart = 1)
+if (ffrkautostart = 1)
 	{
 	ffrkshortcut := A_Desktop "\FFRK.lnk"
 	if !FileExist(ffrkshortcut)
@@ -85,6 +103,7 @@ FFRK_farming_process:
 		If ( ffrkcBS = 0 and ffrkcBScount > blackscreentimer)
 			{
 			FFRK_state(1)
+			Sleep, %SLP1%
 			WinClose
 			Sleep,10000
 			}
@@ -97,14 +116,62 @@ FFRK_farming_process:
 			ffrkcBScount = 0
 			}		
 		}
+	ffrkb5 := FFRK_ConfirmImage("ffrk_battle_5",imagevar)
+	If ( ffrkb5 = 0 )
+		{
+		FFRK_click(137,416)
+		sleep, %SLP2%
+		goto, FFRK_farming_process
+		}	
+	ffrkbX := FFRK_ConfirmImage("ffrk_battle_X",imagevar)
+	If ( ffrkbX = 0 ) ; garde-fou
+		{
+		sleep 1000
+		If ( ffrkbX = 0 )
+			{
+			FFRK_click(137,416)
+			sleep, %SLP2%
+			goto, FFRK_farming_process
+			}
+		}	
 	ffrkb1 := FFRK_ConfirmImage(ffrkstamlimit,imagevar)
 	ffrkb2 := FFRK_ConfirmImage("ffrk_battle_2",imagevar)
 	ffrkb2b := FFRK_ConfirmImage("ffrk_battle_2b",imagevar)
+	If ( ffrkb2 = 0 or ffrkb2b = 0)
+		{
+		If ( ffrkb1 = 0 )
+			{
+			If ( ffrkb2 = 0 )
+				{
+				imageurl := A_ScriptDir "\image\ffrk_battle_2.png"
+				}
+			else 
+				{
+				imageurl := A_ScriptDir "\image\ffrk_battle_2b.png"
+				}				
+			imagevarb := "*" imagevar
+			ImageSearch, ffrkclicx, ffrkclicy, 0, 0, %ffrk_window_width%, %ffrk_window_height%, %imagevarb% %imageurl%
+			ffrkclicx := ffrkclicx - ffrk_clic_width
+			ffrkclicy := ffrkclicy - ffrk_clic_height
+			FFRK_click(ffrkclicx,ffrkclicy)	
+			sleep, %SLP2%
+			goto, FFRK_farming_process
+			}
+		}		
 	ffrkb3 := FFRK_ConfirmImage("ffrk_battle_3",imagevar)
+	If ( ffrkb3 = 0 )
+		{
+		FFRK_click(194,304)
+		sleep, %SLP2%
+		goto, FFRK_farming_process
+		}
 	ffrkb4 := FFRK_ConfirmImage("ffrk_battle_4",imagevar)
-	ffrkb5 := FFRK_ConfirmImage("ffrk_battle_5",imagevar)
-	ffrkbX := FFRK_ConfirmImage("ffrk_battle_X",imagevar)
-
+	If ( ffrkb4 = 0 )
+		{
+		FFRK_click(23,382)
+		sleep, %SLP2%
+		goto, FFRK_farming_process
+		}	
 	ffrks1 := FFRK_ConfirmImage("ffrk_select_1_realm",imagevar)
 	ffrks2 := FFRK_ConfirmImage("ffrk_select_2_realm",imagevar)
 	ffrks3 := FFRK_ConfirmImage("ffrk_select_3_realm",imagevar)
@@ -116,24 +183,20 @@ FFRK_farming_process:
 	ffrkr1 := FFRK_ConfirmImage("ffrk_relog_1_start",imagevar)
 	ffrkr2 := FFRK_ConfirmImage("ffrk_relog_2_main",imagevar)
 	ffrkr2b := FFRK_ConfirmImage("ffrk_relog_2b",imagevar)
+	
 	ffrkcSE := FFRK_ConfirmImage("ffrk_crash_systemerror",imagevar)
+	ffrkcEXTD := FFRK_ConfirmImage("ffrk_crash_extdevicelog",imagevar)
 
 	ffrksXF := FFRK_ConfirmImage("ffrk_select_X_dungeonforcequit",imagevar)
 	
 	ffrkd1 := FFRK_ConfirmImage("ffrk_daily_1_screen",imagevar)
 	ffrkd2 := FFRK_ConfirmImage("ffrk_daily_2_ok",imagevar)
 	ffrkd3 := FFRK_ConfirmImage("ffrk_daily_3_okb",imagevar)
-	ffrkd4 := FFRK_ConfirmImage("ffrk_select_4_fabul",imagevar)
-	;msgbox ffrkb1 %ffrkb1%
 	
 	If ( ffrkr1 = 0 )
 		{
 		FFRK_click(141,432)
 		}
-	else If ( ffrkb5 = 0 )
-		{
-		FFRK_click(137,416)
-		}	
 	else If ( ffrkcSE = 0 )
 		{
 		FFRK_click(132,311)
@@ -142,23 +205,6 @@ FFRK_farming_process:
 		{
 		FFRK_click(183,311)
 		}	
-	else If ( ffrkbX = 0 ) ; garde-fou
-		{
-		sleep 1000
-		If ( ffrkbX = 0 )
-			{
-			FFRK_click(137,416)
-			}
-		}	
-	else If ( ffrkb3 = 0 )
-		{
-		FFRK_click(194,304)
-		}
-	else If ( ffrkb4 = 0 )
-		{
-		FFRK_click(23,382)
-		}	
-
 	else If ( ffrks6 = 0 )
 		{
 		imageurl := A_ScriptDir "\image\ffrk_select_6_team.png"
@@ -193,25 +239,6 @@ FFRK_farming_process:
 			Sleep, 500
 			}
 		FFRK_click(66,314)
-		}	
-	else If ( ffrkb2 = 0 or ffrkb2b = 0)
-		{
-		If ( ffrkb1 = 0 )
-			{
-			If ( ffrkb2 = 0 )
-				{
-				imageurl := A_ScriptDir "\image\ffrk_battle_2.png"
-				}
-			else 
-				{
-				imageurl := A_ScriptDir "\image\ffrk_battle_2b.png"
-				}				
-			imagevarb := "*" imagevar
-			ImageSearch, ffrkclicx, ffrkclicy, 0, 0, %ffrk_window_width%, %ffrk_window_height%, %imagevarb% %imageurl%
-			ffrkclicx := ffrkclicx - ffrk_clic_width
-			ffrkclicy := ffrkclicy - ffrk_clic_height
-			FFRK_click(ffrkclicx,ffrkclicy)	
-			}
 		}	
 	else If ( ffrks1 = 0 )
 		{
@@ -256,6 +283,19 @@ FFRK_farming_process:
 		ffrkclicy := ffrkclicy - ffrk_clic_height
 		FFRK_click(ffrkclicx,ffrkclicy)
 		}	
+	else If ( ffrkcEXTD = 0 )
+		{
+		if (extdeviceforcerelog = 0)
+			{
+			msgbox, 48,ERROR,Disconnected !`nAn other device has logged on this account !`n`nThis macro will close.
+			sleep, 2000
+			ExitApp
+			}
+		else
+			{
+			FFRK_click(139,314)
+			}
+		}	
 	}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -274,12 +314,12 @@ FFRK_grey()
 		}
 	}
 
-; check FFRK status and choose what to do
+; check FFRK status
 FFRK_state(aggro)
 	{
 	IfWinNotExist FINAL FANTASY Record Keeper ahk_class KickmotorMain
 		{
-		Sleep, 100
+		Sleep, %SLP1%
 		Return 0
 		}
 	else
@@ -289,7 +329,7 @@ FFRK_state(aggro)
 			WinActivate
 			WinMove, FINAL FANTASY Record Keeper ,,,,%ffrk_window_width%,%ffrk_window_height%
 			}
-		Sleep, 100
+		Sleep, %SLP1%
 		Return 1
 		}
 	}
@@ -317,7 +357,7 @@ FFRK_ConfirmImage(image,imagevar)
 		ImageSearch, , , 0, 0, %ffrk_window_width%, %ffrk_window_height%, %imagevarb% %imageurl%
 		if ErrorLevel = 0
 			Return ErrorLevel
-		Sleep 10
+		Sleep %SLP2%
 		}
 	Return ErrorLevel
 	}

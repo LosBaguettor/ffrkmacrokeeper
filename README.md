@@ -6,7 +6,8 @@ Hi everyone,
 
 **Make sure to read everything before starting.**  
 
-If anything unexcepted happen, check if this issue already exist, if it doesn't, please generate one.  
+If anything unexpected happen, check if this issue already exist, if it doesn't, please generate one.  
+Make sure to join a screenshot of the app (use Alt+PrintScreen then past in Paint, save it in PNG).  
 
 as a reminder, **FFRK AndApp** version only exist for the **Japanese version** of the game.
 
@@ -59,7 +60,7 @@ note : to recover from Black Screen hang both autostart and Crash Relog must be 
 - **WidthD** - Difference between Outside and Inside Window, only change if macro doesn't work or misclick.
 - **HeightD** - Difference between Outside and Inside Window only change if macro doesn't work or misclick.
 
-To get WidthD and HeightD, Launch FFRK AndApp, start "Active Window Info" 
+To get WidthD and HeightD :
 - Launch FFRK AndApp
 - Launch "Active Window Info" (it's a tool installed with AutoHotKey)
 - Select FFRK window
@@ -72,6 +73,12 @@ To get WidthD and HeightD, Launch FFRK AndApp, start "Active Window Info"
 - **dungeonforcequit** - set to 1 if you want the macro to force quit any non-"Normal Dungeon", you will lose your progress on this dungeon. (default : 0)
 - **extdeviceforcerelog** - set to 1 if you want to the macro to relog after being kicked out because you logged on an other device. (default : 0)
 - **blackscreentimer** - Number of Loop before the macro consider your game hanged on a Black Screen. (default : 25)
+- **sleepspeed** - Reduce Macro sleep delay,  higher chance of unexpected result for non-standard value in case of Lag (default : 2)
+
+sleepspeed values :
+- Very Fast : [0] , reduce most sleep by 85%.
+- Fast : [1] , reduce most sleep by 50%.
+- Normal : [2] , normal sleep time.
 
 ##
 
