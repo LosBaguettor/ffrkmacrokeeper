@@ -4,8 +4,8 @@
 SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
 
-Gui +Resize -MinimizeBox -MaximizeBox -SysMenu +AlwaysOnTop -DPIScale -Theme
-Gui Add, Picture, x0 y0 w0 h0, %A_ScriptDir%\include\header.gif
+Gui +Resize -MinimizeBox -MaximizeBox -SysMenu +AlwaysOnTop +DPIScale -Theme
+Gui Add, Picture, x0 y0 w400 h79, %A_ScriptDir%\include\header.gif
 Gui Add, Text, x0 y80 w433 h2 +0x10
 Gui Add, Button, gffrk_saveandexit x96 y208 w100 h30, Save and Exit
 Gui Add, Button, gffrkexit x208 y208 w100 h30, Ignore and Exit
@@ -82,6 +82,8 @@ IniWrite, %ffrkwidth%, %A_ScriptDir%\include\ffrk_macro.ini, and, ffrkwidth
 ;IniWrite, 25, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, blackscreentimer
 ;IniWrite, 2, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, sleepspeed
 ;IniWrite, 0, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, rebootwhilefight
+;IniWrite, 0, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, MOmode
+;IniWrite, 0, %A_ScriptDir%\include\ffrk_macro.ini, knuckles, failoverscreenshot
 Sleep,1000
 ExitApp
 Return
