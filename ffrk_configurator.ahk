@@ -33,7 +33,7 @@ Gui Font, s12
 Gui Add, Text, x208 y136 w125 h20, Condition Check
 Gui Font
 Gui Add, CheckBox, vffrkcrashrelog x136 y92 w12 h12 +Checked
-Gui Add, CheckBox, vffrkdailyrelog x136 y116 w12 h12
+Gui Add, CheckBox, vffrkdailyrelog x136 y116 w12 h12 +Checked
 Gui Add, CheckBox, vffrkautostart x136 y140 w12 h12 +Checked
 Gui Add, CheckBox, vffrkaggro x336 y92 w12 h12 +Checked
 Gui Add, ComboBox, vffrkmacromode x336 y112 w60, Image||

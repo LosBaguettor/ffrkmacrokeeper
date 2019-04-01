@@ -207,7 +207,7 @@ FFRK_farming_process:
 		else
 			{
 			staminalog := staminalog+1
-			staminalogmod := mod(staminalog,150)
+			staminalogmod := mod(staminalog,250)
 			if (staminalogmod = 0)
 				{
 				FileAppend , Stamina threshold not reached yet %staminalog% - waiting`n , %logurl%

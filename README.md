@@ -53,7 +53,7 @@ Now include a way to continue or cancel the current fight if the game crash whil
 - Automatically start FFRK AndApp.
 - Recover from (most) System Error.
 - Recover from a Black Screen hang.
-- Automatically Relog at daily reset if activated
+- Automatically Relog at daily reset.
 - Automatically Relog the macro if you logged in from an other device if activated.
 - Force quit any non-"Normal Dungeon" to go farm fabul if activated.
 - Delay the start of the farm.
@@ -83,7 +83,7 @@ Name - effect
 
 **[baguette]** : Related to the FFRK game
 - **Crash Relog** - Recover from (most) system error.
-- **Daily Relog** - Automatically relog at daily reset time, desactivated by default.
+- **Daily Relog** - Automatically relog at daily reset time.
 - **Autostart** - Automatically Start FFRK if not launched, FFRK shortcut must exist on desktop.
 - **Stamina% Kept** - You will always have at least this amount of stamina in %.
 
